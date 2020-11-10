@@ -14,9 +14,7 @@ namespace Laby1
         {
             ServerTCP server = new ServerTCP(IPAddress.Parse("127.0.0.1"), 2000);
 
-            server.WaitForClient(); //Serwer czeka na klienta
-
-            //server.ServerLoop(); //Serwer czeka i odpowiada na wiadomości
+            server.WaitForClients(); //Serwer czeka na klientow
         }
     }
 }

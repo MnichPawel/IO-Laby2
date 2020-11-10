@@ -21,6 +21,8 @@ namespace Biblioteka
         IPAddress ip_address;
         int port_number;
 
+        int number_of_connected_clients = 0;
+
         /// <summary>
         /// Konstruktor pobierający adres IP oraz port
         /// </summary>
@@ -36,7 +38,7 @@ namespace Biblioteka
         /// <summary>
         /// Funkcja która kończy się dopiero gdy do serwera podepnie się klient
         /// </summary>
-        public void WaitForClient()
+        public void WaitForClients()
         {
             while (true)
             {
@@ -60,11 +62,13 @@ namespace Biblioteka
         /// </summary>
         public void ServerLoop(NetworkStream stream)
         {
+            number_of_connected_clients++;
+
             stream.ReadTimeout = 100000;
             byte[] buffer_get = new byte[1024];
             byte[] buffer_send;
 
-            buffer_send = Encoding.UTF8.GetBytes("Wprowadzaj liczby pojedynczo. W odpowiedzi otrzymasz te liczby spierwiastkowane. Napisz EXIT jeśli chcesz wyjść. Zależnie od ustawień komputera jako przecinek stosuje się , lub .\r\n");
+            buffer_send = Encoding.UTF8.GetBytes("Wprowadzaj liczby pojedynczo. W odpowiedzi otrzymasz te liczby spierwiastkowane. Napisz EXIT jeśli chcesz wyjść. Napisz CLIENTS jeśli chcesz poznać liczbę klientów aktualnie podłączonych. Zależnie od ustawień komputera jako przecinek stosuje się , lub .\r\n");
             stream.Write(buffer_send, 0, buffer_send.Length);
 
             while (true)
@@ -93,7 +97,15 @@ namespace Biblioteka
                     }
                     else
                     {
-                        output_string = "Nie wprowadzono liczby.\r\n";
+                        //Zwróć liczbę podłączonych klientów
+                        if (str.Equals("CLIENTS"))
+                        {
+                            output_string = "Liczba klientów: " + number_of_connected_clients.ToString() + "\r\n";
+                        }
+                        else
+                        {
+                            output_string = "Nie wprowadzono liczby.\r\n";
+                        }
                     }
 
                     buffer_send = Encoding.UTF8.GetBytes(output_string);
@@ -105,6 +117,8 @@ namespace Biblioteka
                     break;
                 }
             }
+
+            number_of_connected_clients--;
         }
     }
 }
