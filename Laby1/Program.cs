@@ -16,7 +16,7 @@ namespace Laby1
 
             server.WaitForClient(); //Serwer czeka na klienta
 
-            server.ServerLoop(); //Serwer czeka i odpowiada na wiadomości
+            //server.ServerLoop(); //Serwer czeka i odpowiada na wiadomości
         }
     }
 }
